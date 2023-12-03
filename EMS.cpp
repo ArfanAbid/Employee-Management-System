@@ -1,6 +1,7 @@
         //  Employee Management System using doubly linked list
 #include<iostream>
 #include<exception>
+#include <string>
 using namespace std;
 
 class Node{
@@ -46,7 +47,7 @@ public:
     }
         
     }
-    // Function to Display the Employee Management System Record
+    //  Function to Display the Employee Management System Record
     void display(){
         Node* temp=head;
         while(temp != NULL) {
@@ -108,6 +109,44 @@ public:
 
     
     }
+    // Function to display Particular ID Data
+    void displaySpecificRecord(Node* node){
+        cout<<"ID: "<<node->id<<"\t Name: "<<node->name<<"\t Department: "<<node->department<<"\t Designation: "<<node->designation<<"\t Salary: "<<node->salary<<endl;
+    }
+
+    // Function to Search record by ID
+    void searchById(int idToSearch){
+        Node* temp =head;
+        while(temp!=NULL){
+            if(temp->id==idToSearch){
+                cout<<"Record for ID: "<<idToSearch<<" is Found. "<<endl;
+                displaySpecificRecord(temp);
+                return;
+            }
+            else{
+                cout<<"Record for ID: "<<idToSearch<<" is Not Found !!! "<<endl;
+                return;
+            }
+        }
+    }
+
+    // Function to search record by Name
+    void searchByName(string toFind){
+        Node* temp =head;
+        while(temp!=NULL){
+            if(temp->name==toFind){
+                cout<<"Record for ID: "<<toFind<<" is Found. "<<endl;
+                displaySpecificRecord(temp);
+                return;
+            }
+            else{
+                cout<<"Record for Name: "<<toFind<<" is Not Found !!! "<<endl;
+                return;
+            }
+        }
+
+    }
+
 
 
 };
@@ -121,5 +160,9 @@ int main(){
 
     EMS.deleteRecord(55);
     EMS.display();
+    cout<<"_______________________________"<<endl;
+
+    EMS.searchById(66);
+    EMS.searchByName("arfan ");
 
 }
