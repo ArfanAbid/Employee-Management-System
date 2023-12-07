@@ -123,30 +123,63 @@ public:
                 displaySpecificRecord(temp);
                 return;
             }
-            else{
-                cout<<"Record for ID: "<<idToSearch<<" is Not Found !!! "<<endl;
-                return;
-            }
+            temp=temp->next;
+        }
+        if(temp==NULL){
+            cout<<"Record for ID: "<<idToSearch<<" is Not Found !!! "<<endl;
         }
     }
 
     // Function to search record by Name
-    void searchByName(string toFind){
+    // void searchByName(string toFind){
+    //     Node* temp =head;
+    //     while(temp!=NULL){
+    //         if(temp->name==toFind){
+    //             cout<<"Record for ID: "<<toFind<<" is Found. "<<endl;
+    //             displaySpecificRecord(temp);
+    //             return;
+    //         }
+    //         else{
+    //             cout<<"Record for Name: "<<toFind<<" is Not Found !!! "<<endl;
+    //             return;
+    //         }
+    //     }
+
+    // }
+    bool isPresent(int idToSearch){
         Node* temp =head;
         while(temp!=NULL){
-            if(temp->name==toFind){
-                cout<<"Record for ID: "<<toFind<<" is Found. "<<endl;
+            if(temp->id==idToSearch){
                 displaySpecificRecord(temp);
-                return;
+                return true;
             }
-            else{
-                cout<<"Record for Name: "<<toFind<<" is Not Found !!! "<<endl;
-                return;
-            }
+            temp=temp->next;
         }
-
+        return false;
     }
 
+    // Function to update the record
+    void updateRecord(int idToUpdate,string name, string department, string designation, int id, int salary){
+        Node* temp=head;
+        if(isPresent(idToUpdate)){
+            while(temp!=NULL){
+                if(temp->id==idToUpdate){
+                    temp->name = name;
+                    temp->department = department;
+                    temp->designation = designation;
+                    temp->id = id;
+                    temp->salary = salary;
+                    cout<<"Record Updated SuccessFully"<<endl;
+                    return;
+                }
+                temp=temp->next;
+            }
+        }else{
+            cout << "Record for ID: " << idToUpdate << " is Not Found !!" << endl;
+
+        }
+    }
+    
 
 
 };
@@ -155,6 +188,7 @@ int main(){
     EMS.insertAtLast("arfan","CS","programmer",55,50000);
     EMS.insertAtLast("Abisheekh","SE","programmer",66,1000000);
     EMS.insertAtLast("Ahmed","CE","SOk Analyst",77,900000);
+    EMS.insertAtLast("Uzair","EE","SEIM Analyst",88,9000);
     EMS.display();
     cout<<endl;
 
@@ -163,6 +197,10 @@ int main(){
     cout<<"_______________________________"<<endl;
 
     EMS.searchById(66);
-    EMS.searchByName("arfan ");
+    // EMS.searchByName("arfan ");
+    cout<<"_______________________________"<<endl;
+    EMS.updateRecord(77,"Iffi","CS","programmer",100,50000);
+    EMS.display();
+
 
 }
