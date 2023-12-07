@@ -1,9 +1,9 @@
         //  Employee Management System using doubly linked list
 #include<iostream>
-#include<windows.h>
-#include<exception>
-#include <string>
 #include<queue>
+#include<exception>
+#include<windows.h>
+#include <string>
 using namespace std;
 
 class Node{
@@ -13,12 +13,15 @@ public:
     string designation;
     int id;
     int salary;
-    int yearsOfService;
+    double yearsOfService;
 
     Node* next;
     Node* previous;
 
-    Node(string name, string department, string designation, int id, int salary,int years){
+    Node(int data){
+        this->salary = data;
+    }
+    Node(string name, string department, string designation, int id, int salary,double years){
         this->name = name;
         this->department = department;
         this->designation = designation;
@@ -61,7 +64,7 @@ public:
         }
     }
     void insert(){
-        int ID,salary,years;string name, department, designation;
+        int ID,salary;double years;string name, department, designation;
         cout<<"Fill the Following Data :: "<<endl;
         cout<<"ID of Employee: ";cin >> ID;
         cout<<"Name of Employee: ";cin.ignore();getline(cin, name);
@@ -74,7 +77,7 @@ public:
 
     }
     // Function to add Record
-    void insertAtLast(string name, string department, string designation, int id, int salary,int years){
+    void insertAtLast(string name, string department, string designation, int id, int salary,double years){
         Node* node = new Node(name, department, designation, id, salary, years);
         if(head==NULL){  // if LL is empty 
             head = node;
@@ -192,7 +195,7 @@ public:
     //     }
     // }
     void update(){
-        int idToUpdate,id,salary,years;string name,department,designation;
+        int idToUpdate,id,salary;double years;string name,department,designation;
         cout<<"Enter the ID of a particular Employee you wants to update Record : ";cin>>idToUpdate;
         cout<<"Please Fill the following fields : "<<endl;
         cout<<"Enter the ID of Employee to update : ";cin>>id;
@@ -216,7 +219,7 @@ public:
     }
 
     // Function to update the record
-    void updateRecord(int idToUpdate,string name, string department, string designation, int id, int salary,int years){
+    void updateRecord(int idToUpdate,string name, string department, string designation, int id, int salary,double years){
         Node* temp=head;
         if(isPresent(idToUpdate)){
             while(temp!=NULL){
@@ -238,9 +241,9 @@ public:
         }
     }
 
-
+    // Function to Assign Bonus
     void assignBonus() {
-        int years,bonus;
+        double years;int bonus;
         cout<<"Enter the Criteria On Years of service for the Employee to assign bonus : ";cin >>years;
         cout<<"Enter the Bonus you want to add in Employee Salary : ";cin>>bonus; 
         Node *temp=head;
@@ -272,7 +275,83 @@ public:
         cout<<"Bonuses distributed Successfully!"<<endl;
         
     }
+    //Function to sort based on salary 
+    void MergeSort(){
+        head=mergeSort(head);
 
+    }
+
+    Node* mergeSort(Node* head){
+        if(head==NULL || head->next==NULL){
+           return head; // sorted
+        } 
+       Node * mid=findMid(head);
+
+        Node* left=head;
+        Node* right=mid->next;
+        mid->next=NULL;
+
+        left=mergeSort(left);
+        right=mergeSort(right);
+
+       Node * result=merge(left,right);
+        return result;
+    }
+
+   Node * merge(Node* left,Node* right){
+        if(left==NULL){
+            return right;
+        }
+        if(right==NULL){
+            return left;
+        }
+        Node* ans=new Node(-1); // creating temporery/dummy node
+        Node* temp=ans;
+        while(left!=NULL && right!=NULL){
+            if(left->salary < right->salary){
+                temp->next=left;
+                temp->previous = left->previous;
+                left->previous = temp;
+                temp=left;
+                left=left->next;
+            }
+            else{
+                temp->next=right;
+                temp->previous = right->previous;
+                right->previous = temp;
+                temp=right;
+                right=right->next;
+            }
+        }
+
+        while(left!=NULL){
+            temp->next=left;
+            temp->previous = left->previous;
+            left->previous = temp;
+            temp=left;
+            left=left->next;
+        }
+        while(right!=NULL){
+            temp->next=right;
+            temp->previous = right->previous;
+            right->previous = temp;
+            temp=right;
+            right=right->next;
+        }
+        ans=ans->next;
+        return ans;
+    }
+
+    Node* findMid(Node* head){
+        Node* slow=head;
+        Node* fast=head->next;
+
+        while(fast!=NULL && fast->next!=NULL){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+       return slow; // slow is actually mid Node
+    }
 
     void menu(){
         cout<<"\t*** MENU ***"<<endl;
@@ -286,7 +365,6 @@ public:
         cout<<"8. Exit."<<endl;
         cout<<"Enter Your choice (1-8) : ";
     }
-    
     void EXIT(){
         cout<<"Exiting ";
         for(int k=0;k<6;k++){        
@@ -304,6 +382,12 @@ public:
 int main(){
     EmployeeManagementSystem EMS;
     int ch;
+    // string name, string department, string designation, int id, int salary,int years
+    EMS.insertAtLast("Arfan","CS","Student",55,10,2);
+    EMS.insertAtLast("IFFIONEX","Cp","Student",55,22,1);
+    EMS.insertAtLast("saim","Ce","Student",55,82,3.5);
+    EMS.insertAtLast("arhan","SE","Student",55,15,4);
+    EMS.insertAtLast("iffi","CE","Student",55,6,1.5);
     while(true){
         // system("cls");
         EMS.menu();
@@ -326,6 +410,7 @@ int main(){
             EMS.display();
             break;
         case 6 :
+            EMS.MergeSort();
             break;
         case 7 :
             EMS.assignBonus();
@@ -340,6 +425,7 @@ int main(){
         }
 
     }
+
 
 
 }
