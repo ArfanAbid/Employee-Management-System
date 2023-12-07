@@ -1,5 +1,6 @@
         //  Employee Management System using doubly linked list
 #include<iostream>
+#include<windows.h>
 #include<exception>
 #include <string>
 using namespace std;
@@ -55,6 +56,18 @@ public:
             temp=temp->next;
         }
     }
+    void insert(){
+        int ID,salary;string name, department, designation;
+        cout<<"Fill the Following Data :: "<<endl;
+        cout<<"ID of Employee: ";cin >> ID;
+        cout<<"Name of Employee: ";cin.ignore();getline(cin, name);
+        cout<<"Department of Employee: ";getline(cin, department);
+        cout<<"Designation of Employee: ";getline(cin, designation);
+        cout<<"Salary of Employee: ";cin >> salary;
+        insertAtLast(name,department,designation,ID,salary);
+        cout<<"Record Added Successfully."<<endl;
+
+    }
     // Function to add Record
     void insertAtLast(string name, string department, string designation, int id, int salary){
         Node* node = new Node(name, department, designation, id, salary);
@@ -70,7 +83,13 @@ public:
 
 
     }
+    void Delete(){
+        int id;
+        cout<<"Enter the ID of Employee you want to delete : ";
+        cin>>id;
+        deleteRecord(id);
 
+        }
     // Function to Delete Record
     void deleteRecord(int idToDelete){
         if(head==NULL){ // if LL is empty
@@ -83,12 +102,14 @@ public:
             } else {
                 tail = NULL; // If the list becomes empty
             }
+            cout<<"Record Deleted SuccessFully "<<endl;
             delete toDelete;
 
         }else if(tail->previous!=NULL && tail->id==idToDelete){ // Delete Last element
             Node* toDelete=tail;
             tail=tail->previous;
             tail->next=NULL;
+            cout<<"Record Deleted SuccessFully "<<endl;
             delete toDelete;
         }
         else{                                // Delete at specifix position
@@ -103,11 +124,30 @@ public:
             Node* toDelete=current->next;
             current->next=current->next->next;
             current->next->previous=current;
+            cout<<"Record Deleted SuccessFully "<<endl;
             delete toDelete;
         }    
 
 
     
+    }
+
+    void search(){
+            int ch;int searchID;string searchName;
+
+            cout<<" 1. Search By ID "<<endl;
+            cout<<" 2. Search By Name "<<endl;
+            cout<<"Enter your choice "<<endl;
+            cin >> ch;
+            if(ch == 1){
+                cout<<"Enter ID you want to search : ";
+                cin>>searchID;
+                searchById(searchID);
+            }else{
+                cout<<"Enter Name you want to search : ";
+                cin>>searchName;
+                // searchByName(searchName);           
+                }
     }
     // Function to display Particular ID Data
     void displaySpecificRecord(Node* node){
@@ -130,22 +170,33 @@ public:
         }
     }
 
-    // Function to search record by Name
+    //Function to search record by Name
     // void searchByName(string toFind){
     //     Node* temp =head;
     //     while(temp!=NULL){
     //         if(temp->name==toFind){
-    //             cout<<"Record for ID: "<<toFind<<" is Found. "<<endl;
+    //             cout<<"Record for Name: "<<toFind<<" is Found. "<<endl;
     //             displaySpecificRecord(temp);
     //             return;
     //         }
-    //         else{
-    //             cout<<"Record for Name: "<<toFind<<" is Not Found !!! "<<endl;
-    //             return;
-    //         }
+    //         temp=temp->next;
     //     }
+    //     if(temp==NULL){
+    //         cout<<"Record for Name: "<<toFind<<" is Not Found !!! "<<endl;
 
+    //     }
     // }
+    void update(){
+        int idToUpdate,id,salary;string name,department,designation;
+        cout<<"Enter the ID of a particular Employee you wants to update Record : ";cin>>idToUpdate;
+        cout<<"Please Fill the following fields : "<<endl;
+        cout<<"Enter the ID of Employee to update : ";cin>>id;
+        cout<<"Enter the Name of the Employee to update : ";cin.ignore();getline(cin,name);
+        cout<<"Enter the Department of Employee to update : ";getline(cin,department);
+        cout<<" enter the Designation of the Employee to update : ";getline(cin,designation);
+        cout<<"Enter the Salary of the Employee to update : ";cin>>salary;
+        updateRecord(idToUpdate,name,department,designation,id,salary);
+    }
     bool isPresent(int idToSearch){
         Node* temp =head;
         while(temp!=NULL){
@@ -179,28 +230,72 @@ public:
 
         }
     }
-    
 
+    void menu(){
+        cout<<"\t*** MENU ***"<<endl;
+        cout<<"1. Add Employee Record"<<endl;
+        cout<<"2. Search Employee Record"<<endl;
+        cout<<"3. Update Employee Record"<<endl;
+        cout<<"4. Delete Employee Record"<<endl;
+        cout<<"5. Display All  Employees Record"<<endl;
+        cout<<"6. Sort Record "<<endl;
+        cout<<"7. Assign Bonus"<<endl;
+        cout<<"8. Exit."<<endl;
+        cout<<"Enter Your choice (1-8) : ";
+    }
+    
+    void EXIT(){
+        cout<<"Exiting ";
+        for(int k=0;k<6;k++){        
+		    cout<<".";
+	        Sleep(600);
+	    }
+    }
 
 };
+
+
+
+
+
 int main(){
     EmployeeManagementSystem EMS;
-    EMS.insertAtLast("arfan","CS","programmer",55,50000);
-    EMS.insertAtLast("Abisheekh","SE","programmer",66,1000000);
-    EMS.insertAtLast("Ahmed","CE","SOk Analyst",77,900000);
-    EMS.insertAtLast("Uzair","EE","SEIM Analyst",88,9000);
-    EMS.display();
-    cout<<endl;
+    int ch;
+    while(true){
+        // system("cls");
+        EMS.menu();
+        cin >> ch;
 
-    EMS.deleteRecord(55);
-    EMS.display();
-    cout<<"_______________________________"<<endl;
+    switch(ch){
+        case 1 :
+            EMS.insert();
+            break;
+        case 2 :
+            EMS.search();
+            break;
+        case  3 :
+            EMS.update();
+            break;
+        case 4 :
+            EMS.Delete();
+            break;
+        case 5 :
+            EMS.display();
+            break;
+        case 6 :
+            break;
+        case 7 :
+            break; 
+        case 8 :
+            EMS.EXIT();
+            exit(0);
+            break;       
+        default :
+            cout<<"Invalid Choice!!! Please  try again."<<endl;                    
 
-    EMS.searchById(66);
-    // EMS.searchByName("arfan ");
-    cout<<"_______________________________"<<endl;
-    EMS.updateRecord(77,"Iffi","CS","programmer",100,50000);
-    EMS.display();
+        }
+
+    }
 
 
 }
