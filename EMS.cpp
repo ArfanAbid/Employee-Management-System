@@ -3,6 +3,7 @@
 #include<windows.h>
 #include<exception>
 #include <string>
+#include<queue>
 using namespace std;
 
 class Node{
@@ -12,16 +13,18 @@ public:
     string designation;
     int id;
     int salary;
+    int yearsOfService;
 
     Node* next;
     Node* previous;
 
-    Node(string name, string department, string designation, int id, int salary){
+    Node(string name, string department, string designation, int id, int salary,int years){
         this->name = name;
         this->department = department;
         this->designation = designation;
         this->id = id;
         this->salary = salary;
+        this->yearsOfService = years;
 
         this->next=NULL;
         this->previous = NULL;
@@ -32,6 +35,7 @@ class EmployeeManagementSystem{
 private:
     Node * head;
     Node * tail;
+    queue<Node*> bonusQueue;
 public:
     //Constructor
     EmployeeManagementSystem(){
@@ -57,20 +61,21 @@ public:
         }
     }
     void insert(){
-        int ID,salary;string name, department, designation;
+        int ID,salary,years;string name, department, designation;
         cout<<"Fill the Following Data :: "<<endl;
         cout<<"ID of Employee: ";cin >> ID;
         cout<<"Name of Employee: ";cin.ignore();getline(cin, name);
         cout<<"Department of Employee: ";getline(cin, department);
         cout<<"Designation of Employee: ";getline(cin, designation);
         cout<<"Salary of Employee: ";cin >> salary;
-        insertAtLast(name,department,designation,ID,salary);
+        cout<<"Years of service of Employee: ";cin >>years;
+        insertAtLast(name,department,designation,ID,salary,years);
         cout<<"Record Added Successfully."<<endl;
 
     }
     // Function to add Record
-    void insertAtLast(string name, string department, string designation, int id, int salary){
-        Node* node = new Node(name, department, designation, id, salary);
+    void insertAtLast(string name, string department, string designation, int id, int salary,int years){
+        Node* node = new Node(name, department, designation, id, salary, years);
         if(head==NULL){  // if LL is empty 
             head = node;
             tail = node;
@@ -187,7 +192,7 @@ public:
     //     }
     // }
     void update(){
-        int idToUpdate,id,salary;string name,department,designation;
+        int idToUpdate,id,salary,years;string name,department,designation;
         cout<<"Enter the ID of a particular Employee you wants to update Record : ";cin>>idToUpdate;
         cout<<"Please Fill the following fields : "<<endl;
         cout<<"Enter the ID of Employee to update : ";cin>>id;
@@ -195,7 +200,8 @@ public:
         cout<<"Enter the Department of Employee to update : ";getline(cin,department);
         cout<<" enter the Designation of the Employee to update : ";getline(cin,designation);
         cout<<"Enter the Salary of the Employee to update : ";cin>>salary;
-        updateRecord(idToUpdate,name,department,designation,id,salary);
+        cout<<"Enter the Years of service of the Employee to update : ";cin>>years;
+        updateRecord(idToUpdate,name,department,designation,id,salary,years);
     }
     bool isPresent(int idToSearch){
         Node* temp =head;
@@ -210,7 +216,7 @@ public:
     }
 
     // Function to update the record
-    void updateRecord(int idToUpdate,string name, string department, string designation, int id, int salary){
+    void updateRecord(int idToUpdate,string name, string department, string designation, int id, int salary,int years){
         Node* temp=head;
         if(isPresent(idToUpdate)){
             while(temp!=NULL){
@@ -220,6 +226,7 @@ public:
                     temp->designation = designation;
                     temp->id = id;
                     temp->salary = salary;
+                    temp->yearsOfService=years;
                     cout<<"Record Updated SuccessFully"<<endl;
                     return;
                 }
@@ -230,6 +237,42 @@ public:
 
         }
     }
+
+
+    void assignBonus() {
+        int years,bonus;
+        cout<<"Enter the Criteria On Years of service for the Employee to assign bonus : ";cin >>years;
+        cout<<"Enter the Bonus you want to add in Employee Salary : ";cin>>bonus; 
+        Node *temp=head;
+        while(temp!=NULL){
+            if(isEligibleForBonus(temp,years)){
+                bonusQueue.push(temp);
+                temp=temp->next;
+            }else{
+                temp=temp->next;
+            }
+        }
+        distributeBonuses(bonus); 
+
+    }
+    bool isEligibleForBonus(Node* node,int criteria) {
+        if(node->yearsOfService>=criteria){
+            return true;
+        }
+        return false;
+        
+    }
+    // Function to distribute bonuses
+    void distributeBonuses(int bonus) {
+        while(!bonusQueue.empty()){
+            Node* toAssign=bonusQueue.front();
+            toAssign->salary=toAssign->salary+bonus;
+            bonusQueue.pop();
+        }
+        cout<<"Bonuses distributed Successfully!"<<endl;
+        
+    }
+
 
     void menu(){
         cout<<"\t*** MENU ***"<<endl;
@@ -285,6 +328,7 @@ int main(){
         case 6 :
             break;
         case 7 :
+            EMS.assignBonus();
             break; 
         case 8 :
             EMS.EXIT();
