@@ -4,6 +4,9 @@
 #include<exception>
 #include<windows.h>
 #include <string>
+// #include <cctype> 
+#include <algorithm>
+
 using namespace std;
 
 class Node{
@@ -173,11 +176,12 @@ public:
                 cout<<"Enter ID you want to search : ";
                 cin>>searchID;
                 searchById(searchID);
-            }else{
-                cout<<"Enter Name you want to search : ";
-                cin>>searchName;
-                // searchByName(searchName);           
-                }
+            }else {
+                cout << "Enter Name you want to search: ";
+                cin.ignore(); // Ignore previous newline character in input buffer
+                getline(cin, searchName); // Read full line with spaces
+                searchByName(searchName);           
+}
     }
     
 
@@ -197,22 +201,27 @@ public:
         }
     }
 
-    //Function to search record by Name
-    // void searchByName(string toFind){
-    //     Node* temp =head;
-    //     while(temp!=NULL){
-    //         if(temp->name==toFind){
-    //             cout<<"Record for Name: "<<toFind<<" is Found. "<<endl;
-    //             displaySpecificRecord(temp);
-    //             return;
-    //         }
-    //         temp=temp->next;
-    //     }
-    //     if(temp==NULL){
-    //         cout<<"Record for Name: "<<toFind<<" is Not Found !!! "<<endl;
+    // Function to search record by Name
+    void searchByName(string toFind){
+        Node* temp = head;
+        // Convert the search string to lowercase
+        transform(toFind.begin(), toFind.end(), toFind.begin(), ::tolower);
+        
+        while(temp != NULL){
+            string nameToLower = temp->name;
+            // Convert the name in the list to lowercase for comparison
+            transform(nameToLower.begin(), nameToLower.end(), nameToLower.begin(), ::tolower);
+            
+            if(nameToLower == toFind){
+                cout << "Record for Name: " << temp->name << " is Found." << endl;
+                displaySpecificRecord(temp);
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Record for Name: " << toFind << " is Not Found!!!" << endl;
+    }
 
-    //     }
-    // }
 
     // Function to update the record
     void update(){
@@ -439,8 +448,6 @@ int main(){
 
 
 /*
-Add exception for if id wiith same NO id exist then do not insert that id with same id NO.
 Add Exceptional handeling
 Add File Handling
-Configer Search by name
 */
