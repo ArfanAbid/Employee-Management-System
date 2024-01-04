@@ -59,10 +59,27 @@ public:
     void display(){
         Node* temp=head;
         while(temp != NULL) {
-        cout<<"ID: "<<temp->id<<"\t Name: "<<temp->name<<"\t Department: "<<temp->department<<"\t Designation: "<<temp->designation<<"\t Salary: "<<temp->salary<<endl;
+            cout<<"ID: "<<temp->id<<"\t Name: "<<temp->name<<"\t Department: "<<temp->department<<"\t Designation: "<<temp->designation<<"\t Salary: "<<temp->salary<<"\t Years of Service: "<<temp->yearsOfService<<endl;
             temp=temp->next;
         }
     }
+    // Function to display Particular ID Data
+    void displaySpecificRecord(Node* node){
+        cout<<"ID: "<<node->id<<"\t Name: "<<node->name<<"\t Department: "<<node->department<<"\t Designation: "<<node->designation<<"\t Salary: "<<node->salary<<"\t Years of Service: "<<node->yearsOfService<<endl;
+    }
+    // Function to Check present or Not 
+    bool isPresent(int idToSearch){
+        Node* temp =head;
+        while(temp!=NULL){
+            if(temp->id==idToSearch){
+                displaySpecificRecord(temp);
+                return true;
+            }
+            temp=temp->next;
+        }
+        return false;
+    }
+    // Function to add Record
     void insert(){
         int ID,salary;double years;string name, department, designation;
         cout<<"Fill the Following Data :: "<<endl;
@@ -73,24 +90,30 @@ public:
         cout<<"Salary of Employee: ";cin >> salary;
         cout<<"Years of service of Employee: ";cin >>years;
         insertAtLast(name,department,designation,ID,salary,years);
-        cout<<"Record Added Successfully."<<endl;
 
     }
-    // Function to add Record
     void insertAtLast(string name, string department, string designation, int id, int salary,double years){
         Node* node = new Node(name, department, designation, id, salary, years);
-        if(head==NULL){  // if LL is empty 
-            head = node;
-            tail = node;
+        if(isPresent(node->id)){
+            cout<<"ID NO: "<<node->id<<" Already Exists !!! "<<endl;
+            return;
         }else{
 
-            tail->next=node;
-            node->previous=tail;
-            tail=node;
-            }
+            if(head==NULL){  // if LL is empty 
+                head = node;
+                tail = node;
+            }else{
 
+                tail->next=node;
+                node->previous=tail;
+                tail=node;
+                }
+            cout<<"Record Added Successfully."<<endl;
+    
+        }
 
-    }
+    }   
+    // Function to Delete Record
     void Delete(){
         int id;
         cout<<"Enter the ID of Employee you want to delete : ";
@@ -98,7 +121,6 @@ public:
         deleteRecord(id);
 
         }
-    // Function to Delete Record
     void deleteRecord(int idToDelete){
         if(head==NULL){ // if LL is empty
             throw runtime_error("No Record to Delete !!! ");
@@ -157,10 +179,7 @@ public:
                 // searchByName(searchName);           
                 }
     }
-    // Function to display Particular ID Data
-    void displaySpecificRecord(Node* node){
-        cout<<"ID: "<<node->id<<"\t Name: "<<node->name<<"\t Department: "<<node->department<<"\t Designation: "<<node->designation<<"\t Salary: "<<node->salary<<endl;
-    }
+    
 
     // Function to Search record by ID
     void searchById(int idToSearch){
@@ -194,6 +213,8 @@ public:
 
     //     }
     // }
+
+    // Function to update the record
     void update(){
         int idToUpdate,id,salary;double years;string name,department,designation;
         cout<<"Enter the ID of a particular Employee you wants to update Record : ";cin>>idToUpdate;
@@ -201,24 +222,11 @@ public:
         cout<<"Enter the ID of Employee to update : ";cin>>id;
         cout<<"Enter the Name of the Employee to update : ";cin.ignore();getline(cin,name);
         cout<<"Enter the Department of Employee to update : ";getline(cin,department);
-        cout<<" enter the Designation of the Employee to update : ";getline(cin,designation);
+        cout<<"Enter the Designation of the Employee to update : ";getline(cin,designation);
         cout<<"Enter the Salary of the Employee to update : ";cin>>salary;
         cout<<"Enter the Years of service of the Employee to update : ";cin>>years;
         updateRecord(idToUpdate,name,department,designation,id,salary,years);
     }
-    bool isPresent(int idToSearch){
-        Node* temp =head;
-        while(temp!=NULL){
-            if(temp->id==idToSearch){
-                displaySpecificRecord(temp);
-                return true;
-            }
-            temp=temp->next;
-        }
-        return false;
-    }
-
-    // Function to update the record
     void updateRecord(int idToUpdate,string name, string department, string designation, int id, int salary,double years){
         Node* temp=head;
         if(isPresent(idToUpdate)){
@@ -280,7 +288,6 @@ public:
         head=mergeSort(head);
 
     }
-
     Node* mergeSort(Node* head){
         if(head==NULL || head->next==NULL){
            return head; // sorted
@@ -305,7 +312,7 @@ public:
         if(right==NULL){
             return left;
         }
-        Node* ans=new Node(-1); // creating temporery/dummy node
+        Node* ans=new Node(-1); // creating temporary/dummy node
         Node* temp=ans;
         while(left!=NULL && right!=NULL){
             if(left->salary < right->salary){
@@ -352,19 +359,20 @@ public:
         }
        return slow; // slow is actually mid Node
     }
-
+    // Function for Displaying Menu
     void menu(){
-        cout<<"\t*** MENU ***"<<endl;
+        cout<<"\t______ MENU ______"<<endl<<endl;
         cout<<"1. Add Employee Record"<<endl;
         cout<<"2. Search Employee Record"<<endl;
         cout<<"3. Update Employee Record"<<endl;
         cout<<"4. Delete Employee Record"<<endl;
-        cout<<"5. Display All  Employees Record"<<endl;
-        cout<<"6. Sort Record "<<endl;
-        cout<<"7. Assign Bonus"<<endl;
+        cout<<"5. Display All Employees Record"<<endl;
+        cout<<"6. Sort Employees Record "<<endl;
+        cout<<"7. Assign Bonus to Employees"<<endl;
         cout<<"8. Exit."<<endl;
         cout<<"Enter Your choice (1-8) : ";
     }
+    // Function for Exit
     void EXIT(){
         cout<<"Exiting ";
         for(int k=0;k<6;k++){        
@@ -382,12 +390,11 @@ public:
 int main(){
     EmployeeManagementSystem EMS;
     int ch;
-    // string name, string department, string designation, int id, int salary,int years
     EMS.insertAtLast("Arfan","CS","Student",55,10,2);
-    EMS.insertAtLast("IFFIONEX","Cp","Student",55,22,1);
-    EMS.insertAtLast("saim","Ce","Student",55,82,3.5);
-    EMS.insertAtLast("arhan","SE","Student",55,15,4);
-    EMS.insertAtLast("iffi","CE","Student",55,6,1.5);
+    EMS.insertAtLast("IFFIONEX","Cp","Student",66,22,1);
+    EMS.insertAtLast("saim","Ce","Student",77,82,3.5);
+    EMS.insertAtLast("arhan","SE","Student",88,15,4);
+    EMS.insertAtLast("iffi","CE","Student",99,6,1.5);
     while(true){
         // system("cls");
         EMS.menu();
@@ -429,3 +436,11 @@ int main(){
 
 
 }
+
+
+/*
+Add exception for if id wiith same NO id exist then do not insert that id with same id NO.
+Add Exceptional handeling
+Add File Handling
+Configer Search by name
+*/
