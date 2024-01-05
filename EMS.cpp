@@ -4,8 +4,7 @@
 #include<exception>
 #include<windows.h>
 #include <string>
-// #include <cctype> 
-#include <algorithm>
+#include <algorithm> // For Transform : Uppercase and lowercase
 
 using namespace std;
 
@@ -405,12 +404,11 @@ int main(){
     EMS.insertAtLast("arhan","SE","Student",88,15,4);
     EMS.insertAtLast("iffi","CE","Student",99,6,1.5);
     while(true){
-        // system("cls");
         EMS.menu();
         cin >> ch;
-
+        system("cls");
     switch(ch){
-        case 1 :
+        case 1 :        
             EMS.insert();
             break;
         case 2 :
