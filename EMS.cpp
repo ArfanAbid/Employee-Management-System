@@ -5,6 +5,8 @@
 #include<windows.h>
 #include <string>
 #include <algorithm> // For Transform : Uppercase and lowercase
+#include<fstream>
+#include<sstream>
 
 using namespace std;
 
@@ -110,7 +112,7 @@ public:
                 node->previous=tail;
                 tail=node;
                 }
-            cout<<"Record Added Successfully."<<endl;
+            // cout<<"Record Added Successfully."<<endl;
     
         }
 
@@ -388,21 +390,60 @@ public:
 	        Sleep(600);
 	    }
     }
+    // Functions for file Handling
+    void loadFromFile(EmployeeManagementSystem &EMS, const string &filename) {
+        ifstream file(filename);
+        if (file.is_open()) {
+            string line;
+            while (getline(file, line)) {
+                // Parse the line and extract data
+                // Format: Name,Department,Designation,ID,Salary,YearsOfService
+                stringstream ss(line);
+                string name, department, designation;
+                int id, salary;
+                double yearsOfService;
+                char delimiter = ',';
+
+                getline(ss, name, delimiter);
+                getline(ss, department, delimiter);
+                getline(ss, designation, delimiter);
+                ss >> id >> delimiter >> salary >> delimiter >> yearsOfService;
+
+                EMS.insertAtLast(name, department, designation, id, salary, yearsOfService);
+            }
+            file.close();
+            cout << "Data loaded successfully from file: " << filename << endl;
+        } else {
+            cout << "Unable to open file: " << filename << endl;
+        }
+    }
+    void saveToFile(const string &filename) {
+            ofstream file(filename);
+            if (file.is_open()) {
+                Node *temp = head;
+                while (temp != NULL) {
+                    file << temp->name << "," << temp->department << "," << temp->designation << ","
+                        << temp->id << "," << temp->salary << "," << temp->yearsOfService << endl;
+                    temp = temp->next;
+                }
+                file.close();
+                cout << "Data saved successfully to file: " << filename << endl;
+            } else {
+                cout << "Unable to open file: " << filename << endl;
+            }
+        }
+    
+
+
 
 };
-
-
-
 
 
 int main(){
     EmployeeManagementSystem EMS;
     int ch;
-    EMS.insertAtLast("Arfan","CS","Student",55,10,2);
-    EMS.insertAtLast("IFFIONEX","Cp","Student",66,22,1);
-    EMS.insertAtLast("saim","Ce","Student",77,82,3.5);
-    EMS.insertAtLast("arhan","SE","Student",88,15,4);
-    EMS.insertAtLast("iffi","CE","Student",99,6,1.5);
+    EMS.loadFromFile(EMS, "employee_data.txt");
+
     while(true){
         EMS.menu();
         cin >> ch;
@@ -430,6 +471,7 @@ int main(){
             EMS.assignBonus();
             break; 
         case 8 :
+            EMS.saveToFile("employee_data.txt");
             EMS.EXIT();
             exit(0);
             break;       
@@ -440,12 +482,11 @@ int main(){
 
     }
 
-
+    EMS.saveToFile("employee_data.txt");
 
 }
 
 
 /*
 Add Exceptional handeling
-Add File Handling
 */
